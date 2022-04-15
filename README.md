@@ -45,13 +45,8 @@ import subprocess
 ```
 cmd='''
 ml libs/singularity/3.7.1
-export MAGPURIFYDB=${HOME}/MAGpurify-db-v1.0
 singularity exec \
-    /work/c00cjz002/nvidia/magpurify_v2.1.2.sif \
-    bash -c "magpurify -h && \
-    date && \
-    pwd && \
-    sleep 60"  
+    bash -c "echo $(date) > date.txt && sleep 60"  
 '''
 ```
 
