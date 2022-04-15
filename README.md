@@ -3,7 +3,43 @@
 1. 建立檔案工作派送排程範例
 > ~/myslurm/slurm_demo01.ipynb
 
-2. 將 SLURM 寫成 FUNCTION
+2. 將 SLURM 寫成 FUNCTION (T3-C2)
+```
+# https://man.twcc.ai/@TWCC-III-manual/ryyo0tsuu
+def SLURM(cmd):
+    ## SLURM 內容, 請修改 ---> Email
+    SLURM='''#!/work/c00cjz002/binary/bash5.0/bin/bash
+#SBATCH -A GOV110079        # 計畫代號
+#SBATCH -J CPU_T3_C2        # 工作代號 (標籤, 可自行定義)
+#SBATCH -p ct56             # 工作區塊 
+#SBATCH -c 3                # 使用的CPU核心數
+##SBATCH --mem=12g           # 使用的記憶體容量 (不設定自動給予ram 10g)
+#SBATCH --mail-user=summerhill001@gmail.com    # 請修改為您的信向
+#SBATCH --mail-type=BEGIN,END                  # 指定送出email時機 可為NONE, BEGIN, END, FAIL, REQUEUE, ALL
+#SBATCH -o log/%j.logi      # 執行記錄檔案儲存於log目錄底下
+'''
+    myCmd = SLURM + cmd
+    
+    ## 儲存上述內容 SLURM.sh
+    import time
+    slurm_shell = 'slurm/'+time.strftime("%Y-%m-%d_%H-%M-%S")+'.sh'
+    
+    f = open(slurm_shell, "w")
+    f.write(myCmd)
+    f.close()    
+
+    ## 執行SLURM
+    #!sbatch SLURM.sh
+    jobID=(subprocess.check_output('sbatch '+slurm_shell+' |awk \'{print $4}\'', shell=True,text=True))
+    return jobID
+
+## 建立目錄
+import subprocess
+!mkdir -p slurm
+!mkdir -p log
+```
+
+2. 將 SLURM 寫成 FUNCTION (T3-C4)
 指令文件 https://man.twcc.ai/@Ldk_QYrOR2yo3m8Cb1549A/rkegDKslF
 ```
 # https://man.twcc.ai/@Ldk_QYrOR2yo3m8Cb1549A/rkegDKslF
